@@ -9,7 +9,7 @@ pipeline {
         stage('Iniciar sesión en AWS') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'aws-AKIAQY545ZB4TGDMTG4W', variable: 'AWS_CREDENTIALS')]) {
+                    withCredentials([string(credentialsId: 'AKIAQY545ZB4TGDMTG4W', variable: 'AWS_CREDENTIALS')]) {
                         // Configura las credenciales de AWS para Terraform
                         withEnv(["AWS_ACCESS_KEY_ID=${AWS_CREDENTIALS_USUARIO}", "AWS_SECRET_ACCESS_KEY=${AWS_CREDENTIALS_CLAVE}"]) {
                             // Puedes utilizar las variables de entorno AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY en tus comandos Terraform
