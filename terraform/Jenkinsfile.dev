@@ -10,12 +10,6 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'AKIAQY545ZB4TGDMTG4W', variable: 'AWS_CREDENTIALS')]) {
-                        // Configura las credenciales de AWS para Terraform
-                        withEnv(["AWS_ACCESS_KEY_ID=${AWS_CREDENTIALS_USUARIO}", "AWS_SECRET_ACCESS_KEY=${AWS_CREDENTIALS_CLAVE}"]) {
-                            // Puedes utilizar las variables de entorno AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY en tus comandos Terraform
-                            bat "echo %AWS_ACCESS_KEY_ID%"
-                            bat "echo %AWS_SECRET_ACCESS_KEY%"
-
                             // Cambia temporalmente al directorio de Terraform
                             dir(TF_HOME) {
                                 // Inicializa Terraform y aplica los cambios
@@ -23,20 +17,6 @@ pipeline {
                                 bat 'terraform apply --auto-approve'
                                 // Puedes agregar más comandos Terraform según sea necesario
                             }
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Desplegar Infraestructura') {
-            steps {
-                script {
-                    // Cambia temporalmente al directorio donde tienes tu configuración de Terraform
-                    dir(TF_HOME) {
-                        // Ejecutar comandos específicos de Terraform para desplegar tu infraestructura
-                        bat 'terraform init'
-                        bat 'terraform apply --auto-approve'
                     }
                 }
             }
