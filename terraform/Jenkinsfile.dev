@@ -11,8 +11,9 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'AKIAQY545ZB4TGDMTG4W', variable: 'AWS_CREDENTIALS')]) {
                             // Cambia temporalmente al directorio de Terraform
-                            dir(TF_HOME){
+                            
                             dir('C:\\Users\\anonimo\\OneDrive - Universidad Tecnologica del Peru\\Desktop\\AOR\\terraform') {
+                                dir(TF_HOME){
                                 // Inicializa Terraform y aplica los cambios
                                 bat 'terraform init'
                                 bat 'terraform apply --auto-approve'
