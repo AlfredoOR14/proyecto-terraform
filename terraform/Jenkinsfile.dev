@@ -13,8 +13,8 @@ pipeline {
                         // Configura las credenciales de AWS para Terraform
                         withEnv(["AWS_ACCESS_KEY_ID=${AWS_CREDENTIALS_USUARIO}", "AWS_SECRET_ACCESS_KEY=${AWS_CREDENTIALS_CLAVE}"]) {
                             // Puedes utilizar las variables de entorno AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY en tus comandos Terraform
-                            bat "echo \$AWS_ACCESS_KEY_ID"
-                            bat "echo \$AWS_SECRET_ACCESS_KEY"
+                            bat "echo %AWS_ACCESS_KEY_ID%"
+                            bat "echo %AWS_SECRET_ACCESS_KEY%"
 
                             // Cambia temporalmente al directorio de Terraform
                             dir(TF_HOME) {
