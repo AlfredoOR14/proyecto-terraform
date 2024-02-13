@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Simular CMD') {
+            steps {
+                script {
+                    dir('C:\\Users\\anonimo'){
+
+              
+                    bat 'terraform'
+
+   
+
+                    }
+                }
+            }
+        }
+    }
+}
