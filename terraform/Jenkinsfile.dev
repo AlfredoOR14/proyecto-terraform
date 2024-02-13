@@ -5,12 +5,12 @@ pipeline {
         stage('Simular CMD') {
             steps {
                 script {
-                    // Agrega el directorio de Terraform al PATH
-                    bat 'set PATH=C:\\Users\\anonimo\\Downloads\\terraform_1.7.3_windows_386;%PATH%'
-                    
-                    // Ahora deberías poder ejecutar Terraform
-                    bat 'terraform --version'
-                    // Otros comandos de Terraform
+                    // Cambia temporalmente al directorio de Terraform
+                    dir('C:\\Users\\anonimo\\Downloads\\terraform_1.7.3_windows_386') {
+                        // Ahora deberías poder ejecutar Terraform
+                        bat 'terraform --version'
+                        // Otros comandos de Terraform
+                    }
                 }
             }
         }
