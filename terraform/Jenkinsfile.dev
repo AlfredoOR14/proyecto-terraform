@@ -1,28 +1,54 @@
 pipeline {
-    agent any
 
+    parameters {
+        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+    } 
     environment {
-        TF_HOME = 'C:\\Users\\anonimo\\Downloads\\terraform_1.7.3_windows_386'
+        AWS_ACCESS_KEY_ID     = credentials('AKIAQY545ZB44DLHNPHL')
+        AWS_SECRET_ACCESS_KEY = credentials('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')
     }
 
+   agent  any
     stages {
-        stage('Iniciar sesión en AWS') {
+        stage('checkout') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'AKIAQY545ZB4TGDMTG4W', variable: 'AWS_CREDENTIALS')]) {
-                            // Cambia temporalmente al directorio de Terraform
-                            
-                            dir('C:\\Users\\anonimo\\OneDrive - Universidad Tecnologica del Peru\\Desktop\\AOR\\terraform') {
-                                dir(TF_HOME){
-                                // Inicializa Terraform y aplica los cambios
-                                bat 'terraform init'
-                                bat 'terraform apply --auto-approve'
-                                // Puedes agregar más comandos Terraform según sea necesario
-                            }
+                 script{
+                        dir("terraform")
+                        {
+                            git "https://github.com/AlfredoOR14/proyecto-terraform.git"
                         }
                     }
                 }
             }
+
+        stage('Plan') {
+            steps {
+                sh 'pwd;cd terraform/ ; terraform init'
+                sh "pwd;cd terraform/ ; terraform plan -out tfplan"
+                sh 'pwd;cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
+            }
+        }
+        stage('Approval') {
+           when {
+               not {
+                   equals expected: true, actual: params.autoApprove
+               }
+           }
+
+           steps {
+               script {
+                    def plan = readFile 'terraform/tfplan.txt'
+                    input message: "Do you want to apply the plan?",
+                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+               }
+           }
+       }
+
+        stage('Apply') {
+            steps {
+                sh "pwd;cd terraform/ ; terraform apply -input=false tfplan"
+            }
         }
     }
-}
+
+  }
