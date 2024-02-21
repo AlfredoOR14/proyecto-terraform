@@ -12,18 +12,30 @@ pipeline {
         stage('Debug') {
             steps {
                 script {
-                    sh 'pwd; ls -al'  // Verifica el contenido del directorio de trabajo
-                    sh 'git branch -a'  // Lista todas las ramas disponibles
-                    sh 'git remote -v'  // Muestra la configuración remota
+                    echo '--- Debug Information ---'
+                    echo "Current directory: ${pwd()}"
+                    echo 'Listing contents of the workspace:'
+                    sh 'ls -al'
+
+                    echo '--- Git Debug Information ---'
+                    sh 'git branch -a'
+                    sh 'git remote -v'
+
+                    echo '--- Checkout Step ---'
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'master']],
+                        userRemoteConfigs: [[url: 'https://github.com/AlfredoOR14/proyecto-terraform.git']]
+                    ])
                 }
             }
         }
 
         stage('Plan') {
             steps {
-                sh 'pwd; cd terraform/ ; terraform init'
-                sh 'pwd; cd terraform/ ; terraform plan -out tfplan'
-                sh 'pwd; cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
+                sh 'cd terraform/ ; terraform init'
+                sh 'cd terraform/ ; terraform plan -out tfplan'
+                sh 'cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
             }
         }
 
@@ -45,8 +57,9 @@ pipeline {
 
         stage('Apply') {
             steps {
-                sh 'pwd; cd terraform/ ; terraform apply -input=false tfplan'
+                sh 'cd terraform/ ; terraform apply -input=false tfplan'
             }
         }
     }
 }
+
