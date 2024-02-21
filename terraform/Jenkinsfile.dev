@@ -23,9 +23,9 @@ pipeline {
 
         stage('Plan') {
             steps {
-                bat 'cd C:\\Users\\anonimo\\terraform && terraform init'
-                bat 'cd C:\\Users\\anonimo\\terraform && terraform plan -out tfplan'
-                bat 'cd C:\\Users\\anonimo\\terraform && terraform show -no-color tfplan > tfplan.txt'
+                bat 'dir'
+                bat 'dir'
+                bat 'dir'
             }
         }
         stage('Approval') {
@@ -46,7 +46,7 @@ pipeline {
 
         stage('Apply') {
             steps {
-                bat "C:\\Users\\anonimo\\terraform; terraform apply -input=false tfplan"
+               bat 'dir'
             }
         }
     }
