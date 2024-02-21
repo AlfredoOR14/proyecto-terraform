@@ -10,17 +10,6 @@ pipeline {
 
    agent  any
     stages {
-        stage('checkout') {
-            steps {
-                 script{
-                        dir("terraform1")
-                        {
-                            git branch: 'main', url: 'https://github.com/AlfredoOR14/proyecto-terraform.git'
-                        }
-                    }
-                }
-            }
-
         stage('Plan') {
             steps {
                 sh 'pwd;cd terraform/ ; terraform init'
