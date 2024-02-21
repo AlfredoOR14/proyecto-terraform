@@ -1,5 +1,4 @@
 pipeline {
-
     parameters {
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
     } 
@@ -8,36 +7,46 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('NVMmeYrL0oL0cwOWfqAxEvoiKpBNTSLVTKFstqln')
     }
 
-   agent  any
+    agent any
     stages {
-        stage('Plan') {
+        stage('Debug') {
             steps {
-                sh 'pwd;cd terraform/ ; terraform init'
-                sh "pwd;cd terraform/ ; terraform plan -out tfplan"
-                sh 'pwd;cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
+                script {
+                    sh 'pwd; ls -al'  // Verifica el contenido del directorio de trabajo
+                    sh 'git branch -a'  // Lista todas las ramas disponibles
+                    sh 'git remote -v'  // Muestra la configuración remota
+                }
             }
         }
-        stage('Approval') {
-           when {
-               not {
-                   equals expected: true, actual: params.autoApprove
-               }
-           }
 
-           steps {
-               script {
+        stage('Plan') {
+            steps {
+                sh 'pwd; cd terraform/ ; terraform init'
+                sh 'pwd; cd terraform/ ; terraform plan -out tfplan'
+                sh 'pwd; cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
+            }
+        }
+
+        stage('Approval') {
+            when {
+                not {
+                    equals expected: true, actual: params.autoApprove
+                }
+            }
+
+            steps {
+                script {
                     def plan = readFile 'terraform/tfplan.txt'
                     input message: "Do you want to apply the plan?",
                     parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
-               }
-           }
-       }
+                }
+            }
+        }
 
         stage('Apply') {
             steps {
-                sh "pwd;cd terraform/ ; terraform apply -input=false tfplan"
+                sh 'pwd; cd terraform/ ; terraform apply -input=false tfplan'
             }
         }
     }
-
-  }
+}
