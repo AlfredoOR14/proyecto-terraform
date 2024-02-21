@@ -23,12 +23,14 @@ pipeline {
 
         stage('Plan') {
             steps {
-                bat 'cd terraform'
-                bat 'terraform init'
-                bat 'terraform plan -out tfplan'
-                bat 'terraform show -no-color tfplan > tfplan.txt'
+                dir('terraform') {
+                     bat 'terraform init'
+                     bat 'terraform plan -out tfplan'
+                     bat 'terraform show -no-color tfplan > tfplan.txt'
+                }
             }
         }
+
         stage('Approval') {
            when {
                not {
@@ -47,8 +49,10 @@ pipeline {
 
         stage('Apply') {
             steps {
+                dir('terraform') {
                 bat 'cd terraform'
                 bat 'terraform apply -input=false tfplan'
+                }
             }
         }
     }
