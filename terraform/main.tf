@@ -1,6 +1,6 @@
 provider "aws" {
-  access_key = "AKIAQY545ZB45VAO2EHW"
-  secret_key = "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"
+  access_key = "AKIAQY545ZB4RQSDSSHL"
+  secret_key = "rFyy8qD7GCJtZcX2buBzbOFltpwahf9j/rlvVC/C"
 }
 
 resource "aws_s3_bucket" "example_bucket" {
